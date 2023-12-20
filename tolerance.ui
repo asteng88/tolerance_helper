@@ -11,12 +11,12 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Tolerance Helper - V1.1 - Andrew Thomas</string>
+   <string>Tolerance Helper - V1.2 - Andrew Thomas</string>
   </property>
   <widget class="QPushButton" name="quitButton">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>420</x>
      <y>290</y>
      <width>75</width>
      <height>24</height>
@@ -47,8 +47,11 @@
       <property name="layoutDirection">
        <enum>Qt::RightToLeft</enum>
       </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
       <property name="digitCount">
-       <number>7</number>
+       <number>5</number>
       </property>
       <property name="segmentStyle">
        <enum>QLCDNumber::Filled</enum>
@@ -79,10 +82,10 @@
        <number>1</number>
       </property>
       <property name="smallDecimalPoint">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="digitCount">
-       <number>7</number>
+       <number>5</number>
       </property>
      </widget>
     </item>
@@ -99,8 +102,11 @@
       <property name="layoutDirection">
        <enum>Qt::RightToLeft</enum>
       </property>
+      <property name="smallDecimalPoint">
+       <bool>true</bool>
+      </property>
       <property name="digitCount">
-       <number>7</number>
+       <number>5</number>
       </property>
      </widget>
     </item>
@@ -147,6 +153,15 @@
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the &lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;NOMINAL&lt;/span&gt; dimension from the blueprint...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
+      <property name="inputMask">
+       <string>9.999</string>
+      </property>
+      <property name="text">
+       <string>0.000</string>
+      </property>
+      <property name="cursorPosition">
+       <number>0</number>
+      </property>
      </widget>
     </item>
     <item row="1" column="0">
@@ -177,6 +192,15 @@
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the &lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;UPPE&lt;/span&gt;&lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;R&lt;/span&gt; tolerance from the blueprint...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
+      <property name="inputMask">
+       <string>9.999</string>
+      </property>
+      <property name="text">
+       <string>0.000</string>
+      </property>
+      <property name="cursorPosition">
+       <number>0</number>
+      </property>
      </widget>
     </item>
     <item row="2" column="0">
@@ -194,18 +218,6 @@
       </property>
       <property name="buddy">
        <cstring>lower_tolerance_in</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lower_tolerance_in">
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the &lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;LOWER&lt;/span&gt; tolerance from the blueprint...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </item>
@@ -239,6 +251,39 @@
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter your measurement here and click the &lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;CALCULATE&lt;/span&gt; button...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
+      <property name="inputMask">
+       <string>9.999</string>
+      </property>
+      <property name="text">
+       <string>0.000</string>
+      </property>
+      <property name="cursorPosition">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="lower_tolerance_in">
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the &lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;LOWER&lt;/span&gt; tolerance from the blueprint...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="inputMask">
+       <string>9.999</string>
+      </property>
+      <property name="text">
+       <string>0.000</string>
+      </property>
+      <property name="cursorPosition">
+       <number>0</number>
+      </property>
+      <property name="placeholderText">
+       <string>0.000</string>
+      </property>
      </widget>
     </item>
    </layout>
@@ -249,10 +294,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>249</y>
-     <width>421</width>
-     <height>31</height>
+     <x>190</x>
+     <y>250</y>
+     <width>301</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="font">
@@ -281,7 +326,7 @@
   <widget class="QPushButton" name="clearTextButton">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>140</x>
      <y>290</y>
      <width>75</width>
      <height>24</height>
@@ -294,20 +339,33 @@
   <widget class="QPushButton" name="calculateButton">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>290</y>
+     <x>70</x>
+     <y>250</y>
      <width>101</width>
      <height>24</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <italic>false</italic>
+     <bold>true</bold>
+     <underline>false</underline>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Calculate</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="clearMeasurementButton">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>20</x>
      <y>290</y>
      <width>111</width>
      <height>24</height>

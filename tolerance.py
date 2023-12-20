@@ -2,8 +2,10 @@
 # @author: Andrew Thomas
 # @date: 2023-12-13
 # @description: A simple tool to help calculate tolerances and check if a measurement is within tolerance
+# @usage: Enter the upper and lower tolerance values and the nominal value, then enter the measurement value and click calculate
+# @Note: Input masking is controlled through the tolerance.ui file in Qt designer
 # @license: GNU GPL v3
-# @version: 1.1
+# @version: 1.2
 
 import os, sys
 from PyQt6 import uic, QtWidgets
@@ -47,55 +49,53 @@ class UiMainWindow(QMainWindow):
         self.calculateButton.clicked.connect(self.calculateTolerance)
         self.clearMeasurementButoon = self.findChild(QtWidgets.QPushButton, 'clearMeasurementButton')
         self.clearMeasurementButoon.clicked.connect(self.clearMeasurement)
+        self.nominalInput.setFocus() #set the focus to the nominal input box
+        self.nominalInput.setSelection(0,0) #set the cursor to the start of the nominal input box
         
     def addUppTolNomTol(self, text):
         if text.startswith("."):
             text = "0" + text
-            self.upperTolInput.setText(text)
-        try:
-            addupper = float(text) + float(self.nominalInput.text())
-            self.upperTolLCD.display(addupper)
-            calcUpperTol = addupper
-        except ValueError:
-            pass
-
+            self.upperTolInput.setText(text)  
+        else:
+            addUpper = float(self.nominalInput.text()) + float(text)
+            self.upperTolLCD.display(addUpper)
+            return
+            
     def addLotTolNomTol(self, text):
         if text.startswith("."):
             text = "0" + text
             self.lowerTolInput.setText(text)
-        try:
-            addlower = float(self.nominalInput.text()) - float(text)
-            self.lowerTolLCD.display(addlower)
-            calcLowerTol = addlower
-        except ValueError:
-            pass
+        else:
+            addLower = float(self.nominalInput.text()) - float(text)
+            self.lowerTolLCD.display(addLower)
+            return
 
     def quitAction(self):
          QApplication.quit()
          return
     
     def resetLCDstyle(self):
-        self.upperTolLCD.setStyleSheet("color: black")
-        self.lowerTolLCD.setStyleSheet("color: black")
-        self.nominalLCD.setStyleSheet("color: black")
+        for lcd in (self.upperTolLCD, self.lowerTolLCD, self.nominalLCD):
+            lcd.setStyleSheet("color: black")
         return
     
     def clearTextAction(self):
-        self.upperTolInput.clear()
-        self.lowerTolInput.clear()
-        self.nominalInput.clear()
-        self.measurementInput.clear()
+        for inputs in (self.upperTolInput, self.lowerTolInput, self.nominalInput, self.measurementInput):
+            inputs.setText("0.000")
         self.outputLabel.clear()
         self.resetLCDstyle()
-        self.upperTolLCD.display(0)
-        self.lowerTolLCD.display(0)
-        self.nominalLCD.display(0)
+        for lcd in (self.upperTolLCD, self.lowerTolLCD, self.nominalLCD):
+            lcd.display(0)
+        self.nominalInput.setFocus()
+        self.nominalInput.setSelection(0,0)
         return     
     
     def clearMeasurement(self):
-        self.measurementInput.clear()
+        self.measurementInput.setText("0.000")
         self.outputLabel.clear()
         self.resetLCDstyle()
+        self.measurementInput.setFocus()
+        self.measurementInput.setSelection(0,0)
         return
 
     def calculateTolerance(self):
@@ -112,9 +112,8 @@ class UiMainWindow(QMainWindow):
             
             # Check if the measurement is within the tolerance
             if float(self.measurementInput.text()) <= upperTolTotal and float(self.measurementInput.text()) >= lowerTolTotal:
-                self.outputLabel.setStyleSheet("color: green")
-                self.upperTolLCD.setStyleSheet("color: green")
-                self.lowerTolLCD.setStyleSheet("color: green")
+                for setGreen in (self.outputLabel, self.upperTolLCD, self.lowerTolLCD):
+                    setGreen.setStyleSheet("color: green")
                 self.outputLabel.setText('Measurement is within tolerance')
             else:
                 self.outputLabel.setStyleSheet("color: red")
