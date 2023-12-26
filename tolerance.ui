@@ -147,6 +147,12 @@
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the &lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;NOMINAL&lt;/span&gt; dimension from the blueprint...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="maxLength">
+       <number>32767</number>
+      </property>
      </widget>
     </item>
     <item row="1" column="0">
@@ -177,6 +183,15 @@
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the &lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;UPPE&lt;/span&gt;&lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;R&lt;/span&gt; tolerance from the blueprint...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string notr="true"/>
+      </property>
+      <property name="maxLength">
+       <number>32767</number>
+      </property>
      </widget>
     </item>
     <item row="2" column="0">
@@ -206,6 +221,15 @@
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the &lt;span style=&quot; font-weight:700; color:#00aa00;&quot;&gt;LOWER&lt;/span&gt; tolerance from the blueprint...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="inputMask">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="maxLength">
+       <number>32767</number>
       </property>
      </widget>
     </item>
