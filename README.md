@@ -1,1 +1,2 @@
-# tolerance_helper
+# tolerance_helper /n
+Very simple tolerance checker with upper and lower tolerances displayed.
