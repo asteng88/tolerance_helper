@@ -1,2 +1,2 @@
 # tolerance_helper
-Very simple tolerance checker with upper and lower tolerances displayed.
+A helper to calculate the tolerance and determine if the measurement meets the upper and lower tolerances.
