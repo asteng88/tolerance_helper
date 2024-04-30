@@ -16,8 +16,8 @@ def decode(data):
         return ""
 
 code = encode(r"""
-                         
-import os, sys
+
+import os, sys, time
 from PyQt6 import uic, QtWidgets
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QMessageBox)
@@ -41,6 +41,11 @@ class UiMainWindow(QMainWindow):
 
         # Connect signals to slots
         self.aboutButton = self.findChild(QtWidgets.QToolButton, 'aboutButton')
+        self.radioButtons = self.findChild(QtWidgets.QButtonGroup, 'radio_buttonGroup')
+        self.radioButtons.buttonClicked.connect(self.radioClicked)
+        self.rb2 = self.findChild(QtWidgets.QRadioButton, 'rb2')
+        self.rb3 = self.findChild(QtWidgets.QRadioButton, 'rb3')
+        self.rb4 = self.findChild(QtWidgets.QRadioButton, 'rb4')
         self.upperTolLCD = self.findChild(QtWidgets.QLCDNumber, 'lower_tolerance_out')
         self.lowerTolLCD = self.findChild(QtWidgets.QLCDNumber, 'upper_tolerance_out')
         self.nominalLCD = self.findChild(QtWidgets.QLCDNumber, 'nominal_out')
@@ -61,7 +66,52 @@ class UiMainWindow(QMainWindow):
         self.aboutButton.clicked.connect(self.aboutAction)
         self.clearMeasurementButoon = self.findChild(QtWidgets.QPushButton, 'clearMeasurementButton')
         self.clearMeasurementButoon.clicked.connect(self.clearMeasurement)
+        self.decimalPlaceValue = 3 # set the default decimal place value to 3 decimal places
+        self.clearTextAction() #clear all the boxes and set the style
         
+    def radioClicked(self):
+        try:
+            # Access the button that was clicked
+            clicked_button = self.radioButtons.checkedButton()
+            
+            # Determine the decimal place value based on the radio button selected
+            if clicked_button == self.rb2:
+                self.decimalPlaceValue = 2
+            elif clicked_button == self.rb3:
+                self.decimalPlaceValue = 3
+            elif clicked_button == self.rb4:
+                self.decimalPlaceValue = 4
+            else:
+                return
+
+            # Update the LCDs with the new decimal place value
+            self.updateDisplays()
+
+        except Exception as e:
+            print(f"Error updating decimal places: {e}")
+            return
+
+    def updateDisplays(self):
+        try:
+            nominal_value = float(self.nominalInput.text())
+            upper_tolerance = float(self.upperTolInput.text())
+            lower_tolerance = float(self.lowerTolInput.text())
+            
+            if self.nominalInput.text():
+                self.nominalLCD.display(round(nominal_value, self.decimalPlaceValue))
+            if self.upperTolInput.text():
+                self.upperTolLCD.display(round(nominal_value + upper_tolerance, self.decimalPlaceValue))
+            if self.lowerTolInput.text():
+                self.lowerTolLCD.display(round(nominal_value - lower_tolerance, self.decimalPlaceValue))
+
+        except ValueError:
+            if self.nominalInput.text():
+                self.nominalLCD.display(round(nominal_value, self.decimalPlaceValue))
+            if self.upperTolInput.text():
+                self.upperTolLCD.display(round(nominal_value + upper_tolerance, self.decimalPlaceValue))
+            if self.lowerTolInput.text():
+                self.lowerTolLCD.display(round(nominal_value - lower_tolerance, self.decimalPlaceValue))
+            return
     
     def enterNominal(self, text):
         try:
@@ -69,7 +119,7 @@ class UiMainWindow(QMainWindow):
                 text = "0" + text
                 self.nominalInput.setText(text)
             else:
-                text = str(round(float(text), 3))  # Round the text to 3 decimal places
+                text = str(round(float(text), self.decimalPlaceValue))
                 self.nominalLCD.display(text)
                 return
         except ValueError:
@@ -79,10 +129,10 @@ class UiMainWindow(QMainWindow):
         try:
             if text.startswith("."):
                 text = "0" + text
-                round(float(text),3)
+                round(float(text),self.decimalPlaceValue)
                 self.upperTolInput.setText(text)  
             else:
-                addUpper = round(float(self.nominalInput.text()) + float(text),3)
+                addUpper = round(float(self.nominalInput.text()) + float(text),self.decimalPlaceValue)
                 self.upperTolLCD.display(addUpper)
                 return
         except ValueError:
@@ -92,10 +142,10 @@ class UiMainWindow(QMainWindow):
         try:
             if text.startswith("."):
                 text = "0" + text
-                round(float(text),3)
+                round(float(text),self.decimalPlaceValue)
                 self.lowerTolInput.setText(text)
             else:
-                addLower = round(float(self.nominalInput.text()) - float(text),3)
+                addLower = round(float(self.nominalInput.text()) - float(text),self.decimalPlaceValue)
                 self.lowerTolLCD.display(addLower)
                 return
         except ValueError:
@@ -132,7 +182,7 @@ class UiMainWindow(QMainWindow):
     def aboutAction(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Information)
-        msg.setText("Tolerance Helper V1.0")
+        msg.setText("Tolerance Helper V1.1")
         msg.setInformativeText('This is a simple tolerance calculator that \nchecks if a measurement is within tolerance.\n\nWritten by Andrew Thomas. \n\nPlease report or fix any bugs at: \nhttps://github.com/asteng88/tolerance_helper.')
         msg.setWindowTitle("About Tolerance Helper")
         msg.setWindowIcon(QIcon(icon_1))
@@ -141,14 +191,15 @@ class UiMainWindow(QMainWindow):
 
     def calculateTolerance(self):
         try:
-            upperTolTotal = round(float(self.nominalInput.text()) + float(self.upperTolInput.text()), 3)
-            lowerTolTotal = round(float(self.nominalInput.text()) - float(self.lowerTolInput.text()), 3)
+            upperTolTotal = round(float(self.nominalInput.text()) + float(self.upperTolInput.text()), self.decimalPlaceValue)
+            lowerTolTotal = round(float(self.nominalInput.text()) - float(self.lowerTolInput.text()), self.decimalPlaceValue)
+            nominalText = round(float(self.nominalInput.text()), self.decimalPlaceValue)
             self.upperTolLCD.display(upperTolTotal)
             self.lowerTolLCD.display(lowerTolTotal)
-            self.nominalLCD.display(self.nominalInput.text())
+            self.nominalLCD.display(nominalText)
         
             # Check if the measurement is within the tolerance
-            measurement = round(float(self.measurementInput.text()), 3)
+            measurement = round(float(self.measurementInput.text()), self.decimalPlaceValue)
             if measurement <= upperTolTotal and measurement >= lowerTolTotal:
                 for setGreen in (self.outputLabel, self.upperTolLCD, self.lowerTolLCD, self.measurementInput):
                     setGreen.setStyleSheet("color: black; background-color: lightgreen")
@@ -165,12 +216,12 @@ class UiMainWindow(QMainWindow):
                     self.lowerTolLCD.setStyleSheet("color: black; background-color: pink")
                 else:
                     self.lowerTolLCD.setStyleSheet("color: black; background-color: lightgreen")
-            #return
+            return
     
         except ValueError:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Icon.Critical)
-            msg.setText("Error")
+            msg.setText("Input Error")
             msg.setInformativeText('Please ensure ALL fields are complete and are numeric')
             msg.setWindowTitle("Error: Input Error")
             msg.setWindowIcon(QIcon(icon_1))
