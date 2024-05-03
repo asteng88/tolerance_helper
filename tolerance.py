@@ -1,26 +1,13 @@
+from cryptography.fernet import Fernet
 import base64
 
-def encode(data):
-    try:
-        # Standard Base64 Encoding
-        encodedBytes = base64.b64encode(data.encode("utf-8"))
-        return str(encodedBytes, "utf-8")
-    except:
-        return ""
-    
-def decode(data):
-    try:
-        message_bytes = base64.b64decode(data)
-        return message_bytes.decode('utf-8')
-    except:
-        return ""
+code = (br"""
 
-code = encode(r"""
-
-import os, sys, time
+import os, sys
 from PyQt6 import uic, QtWidgets
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import (QIcon, QRegularExpressionValidator)
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QMessageBox)
+from PyQt6.QtCore import QRegularExpression
 
 basedir = os.path.dirname(__file__)  # set a path as the same directory
 os.chdir(basedir)  # change the working directory to the same directory
@@ -28,7 +15,7 @@ os.chdir(basedir)  # change the working directory to the same directory
 # this block ensures that the ICON is displayed on the taskbar in Windows
 try:
     from ctypes import windll
-    my_appid = 'com.asteng88.tolerancehelper.tolerancehelper.1.0'
+    my_appid = 'com.asteng88.tolerancehelper.tolerancehelper.1.2'
     windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_appid)
 except ImportError:
     pass
@@ -66,14 +53,26 @@ class UiMainWindow(QMainWindow):
         self.aboutButton.clicked.connect(self.aboutAction)
         self.clearMeasurementButoon = self.findChild(QtWidgets.QPushButton, 'clearMeasurementButton')
         self.clearMeasurementButoon.clicked.connect(self.clearMeasurement)
+
         self.decimalPlaceValue = 3 # set the default decimal place value to 3 decimal places
+        self.updateValidator() # update the validator for the default decimal place value
         self.clearTextAction() #clear all the boxes and set the style
         
+    def updateValidator(self):
+        decimal_places = self.decimalPlaceValue
+        decimal_regex = QRegularExpression(rf'^\d*\.?\d{{0,{decimal_places}}}$')
+        validator = QRegularExpressionValidator(decimal_regex)
+
+        # Set the validator on each input box
+        self.nominalInput.setValidator(validator)
+        self.lowerTolInput.setValidator(validator)
+        self.upperTolInput.setValidator(validator)
+        self.measurementInput.setValidator(validator)
+
+    
     def radioClicked(self):
         try:
-            # Access the button that was clicked
-            clicked_button = self.radioButtons.checkedButton()
-            
+            clicked_button = self.radioButtons.checkedButton() # Access the button that was clicked
             # Determine the decimal place value based on the radio button selected
             if clicked_button == self.rb2:
                 self.decimalPlaceValue = 2
@@ -83,9 +82,8 @@ class UiMainWindow(QMainWindow):
                 self.decimalPlaceValue = 4
             else:
                 return
-
-            # Update the LCDs with the new decimal place value
             self.updateDisplays()
+            self.updateValidator()
 
         except Exception as e:
             print(f"Error updating decimal places: {e}")
@@ -182,7 +180,7 @@ class UiMainWindow(QMainWindow):
     def aboutAction(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Information)
-        msg.setText("Tolerance Helper V1.1")
+        msg.setText("Tolerance Helper V1.2")
         msg.setInformativeText('This is a simple tolerance calculator that \nchecks if a measurement is within tolerance.\n\nWritten by Andrew Thomas. \n\nPlease report or fix any bugs at: \nhttps://github.com/asteng88/tolerance_helper.')
         msg.setWindowTitle("About Tolerance Helper")
         msg.setWindowIcon(QIcon(icon_1))
@@ -236,4 +234,10 @@ window.show()
 app.exec()
 
 """)
-exec(decode(code))
+key = Fernet.generate_key()
+encryption_type = Fernet(key)
+encrypted_message = encryption_type.encrypt(code)
+
+decrypted_message = encryption_type.decrypt(encrypted_message)
+
+exec(decrypted_message)
