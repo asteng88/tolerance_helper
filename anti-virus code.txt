@@ -1,0 +1,92 @@
+#Solution 1:
+-------------------------------------------------------------
+import base64
+
+your_code = base64.b64encode(b"""
+                     
+    # put the code here... """)
+
+exec(base64.b64decode(your_code))
+
+-------------------------------------------------------------
+#Solution 2:
+-------------------------------------------------------------
+from cryptography.fernet import Fernet
+import base64
+
+code = (br"""
+
+# put the code here...
+
+""")
+key = Fernet.generate_key()
+encryption_type = Fernet(key)
+encrypted_message = encryption_type.encrypt(code)
+
+decrypted_message = encryption_type.decrypt(encrypted_message)
+
+exec(decrypted_message)
+
+-------------------------------------------------------------
+#Solution3 - *** This worked on tolerance.exe and compiled 
+with autopytoexe. See the folder for instructions ***
+-------------------------------------------------------------
+import base64
+
+def encode(data):
+    try:
+        # Standard Base64 Encoding
+        encodedBytes = base64.b64encode(data.encode("utf-8"))
+        return str(encodedBytes, "utf-8")
+    except:
+        return ""
+    
+def decode(data):
+    try:
+        message_bytes = base64.b64decode(data)
+        return message_bytes.decode('utf-8')
+    except:
+        return ""
+
+code = encode(r"""
+
+# Your code here
+
+""")
+exec(decode(code))
+
+---------------------------------------------------------------
+Solution 4
+---------------------------------------------------------------
+import base64
+
+def encode(data):
+    try:
+        # Standard Base64 Encoding
+        encodedBytes = base64.b64encode(data.encode("utf-8"))
+        encodedStr = str(encodedBytes, "utf-8")
+        print("Encoded data:", encodedStr)  # Debug print
+        return encodedStr
+    except Exception as e:
+        print("Encoding failed:", e)  # Print error if encoding fails
+        return ""
+
+def decode(data):
+    try:
+        message_bytes = base64.b64decode(data)
+        decodedStr = message_bytes.decode('utf-8')
+        print("Decoded data:", decodedStr)  # Debug print
+        return decodedStr
+    except Exception as e:
+        print("Decoding failed:", e)  # Print error if decoding fails
+        return ""
+
+code string = r"""
+# Your Python code goes here (same as your previous submission)
+# Make sure your code string is correctly formatted with necessary escape sequences
+"""
+
+encoded_code = encode(code_string)  # Ensure 'code_string' contains your full Python code
+decoded_code = decode(encoded_code)
+print("Executing decoded code...")
+exec(decoded_code)  # Executes the decoded Python script

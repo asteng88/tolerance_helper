@@ -1,3 +1,0 @@
-Use this command to compile to a single file executable in nuitka:
-
-python -m nuitka --standalone --onefile --follow-imports --enable-plugin=pyqt6 --include-data-files="tolerance.ui=tolerance.ui" --include-data-files="toleranceicon.png=toleranceicon.png" --windows-disable-console --windows-icon-from-ico=toleranceicon.ico tolerance.py
